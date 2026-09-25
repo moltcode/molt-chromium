@@ -1,9 +1,10 @@
 NAME    := molt-chromium
 VERSION := $(shell jq -r .version package.json)
-# package.json version is <jbr>-<build>, e.g. 21.0.11-b1163.116: the exact
-# JetBrains Runtime (jcef) build the Molt Code desktop app ships on.
-JBR       := $(firstword $(subst -, ,$(VERSION)))
-JBR_BUILD := $(lastword $(subst -, ,$(VERSION)))
+# package.json version is <jbr>-<build>[-<revision>], e.g. 21.0.11-b1163.116-1:
+# the exact JetBrains Runtime (jcef) build the Molt Code desktop app ships on,
+# plus an optional packaging revision.
+JBR       := $(word 1,$(subst -, ,$(VERSION)))
+JBR_BUILD := $(word 2,$(subst -, ,$(VERSION)))
 
 PLATFORMS := darwin-arm64 darwin-x64 linux-x64 linux-arm64
 CACHE     ?= $(or $(XDG_CACHE_HOME),$(HOME)/.cache)/molt-chromium
@@ -27,7 +28,7 @@ release:
 	@test -f out/artifacts.json || (echo "run make dist first"; exit 1)
 	gh release create "v$(VERSION)" out/*.tgz --repo moltcode/$(NAME) \
 		--title "$(NAME) $(VERSION)" \
-		--notes "Chromium (JetBrains Runtime jcef $(JBR)-$(JBR_BUILD), out-of-process cef_server) for Molt Code HTML previews. Files are JetBrains' unmodified, signatures intact."
+		--notes "Chromium (JetBrains Runtime jcef $(JBR)-$(JBR_BUILD), out-of-process cef_server) for Molt Code HTML previews. macOS bundles are re-signed and notarized with Molt's Developer ID (Utpun Tech Labs, ZW445NH299); Linux files are JetBrains' unmodified."
 
 clean:
 	rm -rf build out

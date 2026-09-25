@@ -22,9 +22,23 @@ put on PATH or registered:
 
 ## Versions
 
-The version is the JetBrains Runtime build it is cut from, e.g.
-`21.0.11-b1163.116`. It must equal the JBR build the Molt Code app ships on, since
-Chromium has to match the app's `jcef` module; the app refuses any other.
+The version is the JetBrains Runtime build it is cut from plus an optional
+packaging revision, e.g. `21.0.11-b1163.116-1`. The JBR build must equal the one
+the Molt Code app ships on, since Chromium has to match the app's `jcef` module;
+the app refuses any other.
+
+## macOS signing
+
+On macOS the bundles are re-signed with Molt's Developer ID (Utpun Tech Labs,
+`ZW445NH299`), keeping JetBrains' entitlements, then notarized and stapled.
+Chromium writes into its own bundle at startup, and macOS App Management only
+lets an app modify bundles from its own developer: signed by JetBrains, that
+write is denied under Molt Code and macOS reports "Molt Code was prevented from
+modifying apps on your Mac". Linux files are JetBrains' unmodified.
+
+`make dist` needs the Developer ID in the keychain and notarization credentials
+(`APPLE_ID`, `APPLE_PASSWORD`, `APPLE_TEAM_ID`) in `$NOTARIZE_ENV` (default
+`../acp/.notarize.env`).
 
 ## Building
 
@@ -35,7 +49,7 @@ make release   # publishes out/ as GitHub release v<version>
 
 `make dist` downloads `jbr_jcef-<jbr>-<platform>-<build>.tar.gz` from JetBrains'
 CDN for darwin-arm64, darwin-x64, linux-x64 and linux-arm64 and repacks only the
-Chromium files. Copy `out/artifacts.json` into the `molt-chromium` entry of the
+Chromium files (re-signing and notarizing the macOS ones). Copy `out/artifacts.json` into the `molt-chromium` entry of the
 Molt plugin catalog (`Moltcode.Agent.Plugins`).
 
 See [NOTICE.md](NOTICE.md) for licenses.

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Builds one platform's npm-layout plugin tarball from the official JetBrains
-# Runtime (jcef) archive: package/chromium/ holds JBR's Chromium, unmodified,
-# and package.json declares it as `resources` for the Molt Code desktop app.
+# Runtime (jcef) archive: package/chromium/ holds JBR's Chromium (re-signed and
+# notarized with Molt's Developer ID on macOS, otherwise unmodified), and
+# package.json declares it as `resources` for the Molt Code desktop app.
 #
 # usage: package.sh <npm-platform> <jbr> <jbr-build> <cache-dir> <build-dir> <out.tgz>
 set -euo pipefail
@@ -41,8 +42,11 @@ home="$(dirname "$home")"
 
 case "$platform" in
   darwin-*)
-    # cp -R keeps the frameworks' symlinks, executable bits and signatures.
+    # cp -R keeps the frameworks' symlinks and executable bits.
     cp -R "$home/../Frameworks" "$package/chromium/Frameworks"
+    # Molt's team, not JetBrains': see sign-macos.sh.
+    "$(dirname "$0")/sign-macos.sh" "$package/chromium"
+    "$(dirname "$0")/notarize-macos.sh" "$package/chromium"
     resources='{
       "cef_server": {
         "path": "chromium/Frameworks/cef_server.app/Contents/MacOS/cef_server",

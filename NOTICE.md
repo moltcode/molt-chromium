@@ -1,9 +1,10 @@
 # Notice
 
-This package redistributes, unmodified, the Chromium parts of JetBrains Runtime
-with JCEF (`jbr_jcef`, https://github.com/JetBrains/JetBrainsRuntime): JCEF's
+This package redistributes the Chromium parts of JetBrains Runtime with JCEF
+(`jbr_jcef`, https://github.com/JetBrains/JetBrainsRuntime): JCEF's
 out-of-process `cef_server`, its helper processes, and the Chromium Embedded
-Framework. Files keep JetBrains' code signatures.
+Framework. Contents are unmodified; on macOS the code signatures are replaced
+with Molt's Developer ID (Utpun Tech Labs Private Limited, ZW445NH299).
 
 - JetBrains Runtime: GPLv2 with the Classpath Exception (see `LICENSE`,
   `ASSEMBLY_EXCEPTION`).
