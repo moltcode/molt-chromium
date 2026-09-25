@@ -1,0 +1,25 @@
+{
+  "name": "molt-chromium",
+  "version": "21.0.11-b1163.116",
+  "description": "Chromium for Molt Code's HTML previews: JetBrains Runtime's out-of-process JCEF server (cef_server) and the Chromium Embedded Framework, repackaged unmodified.",
+  "license": "SEE LICENSE IN NOTICE.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moltcode/molt-chromium"
+  },
+  "files": [
+    "chromium",
+    "NOTICE.md",
+    "LICENSE",
+    "ASSEMBLY_EXCEPTION"
+  ],
+  "molt": {
+    "manifestVersion": 1,
+    "displayName": "Chromium (HTML previews)",
+    "kinds": ["resource"],
+    "platforms": ["darwin-arm64", "darwin-x64", "linux-x64", "linux-arm64"],
+    "contributes": {
+      "resources": {}
+    }
+  }
+}
